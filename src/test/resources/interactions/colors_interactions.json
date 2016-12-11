@@ -1,0 +1,27 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "http://localhost:8080/colors",
+        "type": "application/json"
+      },
+      "response": {
+        "status": "200",
+        "body": "[\"orange\", \"green\", \"brown\"]",
+        "type": "application/json"
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:8080/colors",
+        "body": "red",
+        "type": "application/json"
+      },
+      "response": {
+        "status": "201"
+      }
+    }
+  ]
+}

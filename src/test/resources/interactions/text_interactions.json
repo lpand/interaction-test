@@ -1,0 +1,17 @@
+{
+  "interactions": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "localhost",
+        "type": "text/plain",
+        "body": "request text"
+      },
+      "response": {
+        "status": "200",
+        "body": "response text",
+        "type": "text/plain"
+      }
+    }
+  ]
+}
