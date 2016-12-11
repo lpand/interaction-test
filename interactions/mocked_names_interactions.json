@@ -1,0 +1,15 @@
+{
+  "interactions" : [ {
+    "request" : {
+      "method" : "GET",
+      "url" : "http://localhost:8080/mocked_names",
+      "body" : "",
+      "type" : "text/plain, application/json, application/*+json, */*"
+    },
+    "response" : {
+      "status" : "200",
+      "body" : "[\"Casper\",\"Luca\",\"Gianni\"]",
+      "type" : "application/json;charset=UTF-8"
+    }
+  } ]
+}
