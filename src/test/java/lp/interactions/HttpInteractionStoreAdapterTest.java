@@ -1,6 +1,5 @@
 package lp.interactions;
 
-import com.google.common.io.ByteStreams;
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -12,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.mock.http.client.MockClientHttpResponse;
+import org.springframework.util.StreamUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.is;
@@ -100,9 +101,9 @@ public class HttpInteractionStoreAdapterTest {
   }
 
   private byte[] readBody(ClientHttpResponse response) throws IOException {
-    byte[] clientResponseBodyPayload = new byte[3];
-    ByteStreams.readFully(response.getBody(), clientResponseBodyPayload);
-    return clientResponseBodyPayload;
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    StreamUtils.copy(response.getBody(), buffer);
+    return buffer.toByteArray();
   }
 
 }

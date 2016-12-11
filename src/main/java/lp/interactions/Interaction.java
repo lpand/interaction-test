@@ -11,7 +11,7 @@ public class Interaction {
   }
 
   public static Interaction none() {
-    return new Interaction(new InteractionRequest("", "", "application/json", null), new InteractionResponse("", "text/html", null));
+    return new Interaction(new InteractionRequest("", "", "", null), new InteractionResponse("", "", null));
   }
 
   public InteractionResponse response() {
