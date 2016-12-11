@@ -24,7 +24,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static lp.interactions.AutoInitializingInterceptorFactory.intercept;
+import static lp.interactions.AutoInitializingInterceptorFactory.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -78,6 +78,7 @@ public class AutoInitializingRestClientInterceptorIT {
 
   @AfterClass
   public static void tearDown() throws Exception {
-    Files.delete(NAMES_INTERACTIONS_FILE_PATH);
+    if (Files.exists(NAMES_INTERACTIONS_FILE_PATH))
+      Files.delete(NAMES_INTERACTIONS_FILE_PATH);
   }
 }
