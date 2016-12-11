@@ -1,7 +1,6 @@
 package lp.interactions;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,8 +28,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT, classes = AutoInitializingRestClientInterceptorIT.TestConfig.class)
-public class AutoInitializingRestClientInterceptorIT {
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT, classes = AutoInitializingRestClientInterceptorInteractionsTest.TestConfig.class)
+public class AutoInitializingRestClientInterceptorInteractionsTest {
 
   private static final Path NAMES_INTERACTIONS_FILE_PATH = new File("interactions/names_interactions.json").toPath();
 
