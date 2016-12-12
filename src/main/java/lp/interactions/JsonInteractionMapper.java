@@ -29,9 +29,8 @@ public class JsonInteractionMapper implements InteractionSerializer, Interaction
   public String serialize(List<Interaction> interactions) {
     try {
       return mapper.writeValueAsString(InteractionsWrapper.from(interactions));
-    } catch (JsonProcessingException e) {
-      // TODO: better handling along with tests
-      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new InteractionSerializationException(e);
     }
   }
 
@@ -44,7 +43,7 @@ public class JsonInteractionMapper implements InteractionSerializer, Interaction
       InteractionsWrapper wrapper = mapper.readValue(content, InteractionsWrapper.class);
       return InteractionsWrapper.toInteractions(wrapper);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new InteractionDeserializationException(e);
     }
   }
 
