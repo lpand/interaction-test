@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AutoInitializingInterceptorFactory {
-  private static final JsonInteractionMapper mapper = new JsonInteractionMapper();
+  private static final JsonInteractionMapper MAPPER = new JsonInteractionMapper();
+  private static final File DEFAULT_INTERACTIONS_DIR = new File("interactions");
 
   public static ClientHttpRequestInterceptor intercept(String interactionName) {
     try {
-      File interactionsDir = new File("interactions");
-      File interactionsFile = new File(interactionsDir, interactionName);
-      createDirIfAbsent(interactionsDir);
+      File interactionsFile = new File(DEFAULT_INTERACTIONS_DIR, interactionName);
+      createDirIfAbsent(DEFAULT_INTERACTIONS_DIR);
       createFileIfAbsent(interactionsFile);
       List<Interaction> interactions = new LinkedList<>(readInteractions(interactionsFile));
       return makeInterceptor(fileSystemStore(interactionsFile, interactions));
@@ -29,7 +29,7 @@ public class AutoInitializingInterceptorFactory {
   }
 
   private static List<Interaction> readInteractions(File interactionsFile) throws IOException {
-    return mapper.deserialize(new String(Files.readAllBytes(interactionsFile.toPath())));
+    return MAPPER.deserialize(new String(Files.readAllBytes(interactionsFile.toPath())));
   }
 
   private static void createFileIfAbsent(File file) throws IOException {
@@ -43,6 +43,6 @@ public class AutoInitializingInterceptorFactory {
   }
 
   private static InteractionFileSystemStore fileSystemStore(File interactionsFile, List<Interaction> interactions) {
-    return new InteractionFileSystemStore(interactionsFile, mapper, new InMemoryInteractionStore(interactions), interactions);
+    return new InteractionFileSystemStore(interactionsFile, MAPPER, new InMemoryInteractionStore(interactions), interactions);
   }
 }
