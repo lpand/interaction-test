@@ -17,14 +17,19 @@ public class AutoInitializingInterceptorFactory {
 
   public static ClientHttpRequestInterceptor interceptorFor(String interactionName) {
     try {
-      File interactionsFile = getInteractionFile(interactionName);
-      createDirIfAbsent(DEFAULT_INTERACTIONS_DIR);
-      createFileIfAbsent(interactionsFile);
-      List<Interaction> interactions = new LinkedList<>(readInteractions(interactionsFile));
-      return makeInterceptor(fileSystemStore(interactionsFile, interactions));
+      File isf = createInteractionsStoreFile(interactionName);
+      List<Interaction> savedInteractions = readInteractions(isf);
+      return makeInterceptor(fileSystemStore(isf, savedInteractions));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private static File createInteractionsStoreFile(String interactionName) throws IOException {
+    File interactionsFile = getInteractionFile(interactionName);
+    createDirIfAbsent(DEFAULT_INTERACTIONS_DIR);
+    createFileIfAbsent(interactionsFile);
+    return interactionsFile;
   }
 
   private static File getInteractionFile(String interactionName) {
@@ -36,7 +41,8 @@ public class AutoInitializingInterceptorFactory {
   }
 
   private static List<Interaction> readInteractions(File interactionsFile) throws IOException {
-    return MAPPER.deserialize(new String(readAllBytes(interactionsFile.toPath())));
+    List<Interaction> interactions = MAPPER.deserialize(new String(readAllBytes(interactionsFile.toPath())));
+    return new LinkedList<>(interactions);
   }
 
   private static void createFileIfAbsent(File file) throws IOException {
