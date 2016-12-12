@@ -8,13 +8,16 @@ import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.nio.file.Files.readAllBytes;
+import static lp.interactions.InteractionsStoreNamer.jsonStoreName;
+
 public class AutoInitializingInterceptorFactory {
   private static final JsonInteractionMapper MAPPER = new JsonInteractionMapper();
   private static final File DEFAULT_INTERACTIONS_DIR = new File("interactions");
 
-  public static ClientHttpRequestInterceptor intercept(String interactionName) {
+  public static ClientHttpRequestInterceptor interceptorFor(String interactionName) {
     try {
-      File interactionsFile = new File(DEFAULT_INTERACTIONS_DIR, interactionName);
+      File interactionsFile = getInteractionFile(interactionName);
       createDirIfAbsent(DEFAULT_INTERACTIONS_DIR);
       createFileIfAbsent(interactionsFile);
       List<Interaction> interactions = new LinkedList<>(readInteractions(interactionsFile));
@@ -24,12 +27,16 @@ public class AutoInitializingInterceptorFactory {
     }
   }
 
+  private static File getInteractionFile(String interactionName) {
+    return new File(DEFAULT_INTERACTIONS_DIR, jsonStoreName(interactionName));
+  }
+
   private static AutoInitializingRestClientInterceptor makeInterceptor(InteractionFileSystemStore interactionFileSystemStore) {
     return new AutoInitializingRestClientInterceptor(new HttpInteractionStoreAdapter(new DefaultInteractionFactory(), interactionFileSystemStore));
   }
 
   private static List<Interaction> readInteractions(File interactionsFile) throws IOException {
-    return MAPPER.deserialize(new String(Files.readAllBytes(interactionsFile.toPath())));
+    return MAPPER.deserialize(new String(readAllBytes(interactionsFile.toPath())));
   }
 
   private static void createFileIfAbsent(File file) throws IOException {

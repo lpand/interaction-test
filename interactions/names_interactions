@@ -1,0 +1,15 @@
+{
+  "interactions" : [ {
+    "request" : {
+      "method" : "GET",
+      "url" : "http://localhost:8080/names",
+      "body" : "",
+      "type" : "text/plain, application/json, application/*+json, */*"
+    },
+    "response" : {
+      "status" : "200",
+      "body" : "[\"Uma\",\"Simona\",\"Karen\"]",
+      "type" : "application/json;charset=UTF-8"
+    }
+  } ]
+}

@@ -52,17 +52,17 @@ public class AutoInitializingRestClientInterceptorInteractionsTest {
   @LocalServerPort
   private String port;
 
-  private static RestTemplate interceptedClient(String interactionFileName) {
+  private static RestTemplate interceptedClient(String interactionName) {
     RestTemplate client = new RestTemplate();
     client.setRequestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
-    ClientHttpRequestInterceptor interceptor = intercept(interactionFileName);
+    ClientHttpRequestInterceptor interceptor = interceptorFor(interactionName);
     client.getInterceptors().add(0, interceptor);
     return client;
   }
 
   @Test
   public void interceptNewNamesRequest() throws Exception {
-    RestTemplate client = interceptedClient("names_interactions.json");
+    RestTemplate client = interceptedClient("names_interactions");
     String names = client.getForObject(format("http://localhost:%s/names", port), String.class);
     assertThat(names, is("[\"Uma\",\"Simona\",\"Karen\"]"));
     assertThat(Files.exists(NAMES_INTERACTIONS_FILE_PATH), is(true));
@@ -70,7 +70,7 @@ public class AutoInitializingRestClientInterceptorInteractionsTest {
 
   @Test
   public void interceptSavedRequestAndReturnResponseWithoutContactingServer() throws Exception {
-    RestTemplate client = interceptedClient("mocked_names_interactions.json");
+    RestTemplate client = interceptedClient("mocked_names_interactions");
     String names = client.getForObject(format("http://localhost:%s/mocked_names", port), String.class);
     assertThat(names, is("[\"Casper\",\"Luca\",\"Gianni\"]"));
   }

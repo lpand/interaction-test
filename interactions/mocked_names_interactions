@@ -1,0 +1,15 @@
+{
+  "interactions" : [ {
+    "request" : {
+      "method" : "GET",
+      "url" : "http://localhost:8080/mocked_names",
+      "body" : "",
+      "type" : "text/plain, application/json, application/*+json, */*"
+    },
+    "response" : {
+      "status" : "404",
+      "body" : "{\"timestamp\":1481569246551,\"status\":404,\"error\":\"Not Found\",\"message\":\"No message available\",\"path\":\"/mocked_names\"}",
+      "type" : "application/json;charset=UTF-8"
+    }
+  } ]
+}
