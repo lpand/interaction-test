@@ -16,6 +16,8 @@ import org.springframework.util.StreamUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static lp.interactions.RequestBuilder.aJsonRequest;
+import static lp.interactions.RequestBuilder.aRequest;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -40,6 +42,7 @@ public class HttpInteractionStoreAdapterTest {
   private InteractionFactory interactionFactory;
 
   private HttpInteractionStoreAdapter repository;
+  private static final InteractionRequest INTERACTION_REQUEST = aRequest().build();
 
   @Before
   public void setUp() throws Exception {
@@ -73,11 +76,10 @@ public class HttpInteractionStoreAdapterTest {
   @Test
   public void findNewRequest() throws Exception {
     byte[] payload = {1, 2, 3};
-    InteractionRequest interactionReq = new InteractionRequest(null, null, "application/json", payload);
 
     context.checking(new Expectations() {{
-      allowing(interactionFactory).newRequest(REQUEST, payload); will(returnValue(interactionReq));
-      allowing(interactionStore).findBy(interactionReq); will(returnValue(Interaction.none()));
+      allowing(interactionFactory).newRequest(REQUEST, payload); will(returnValue(INTERACTION_REQUEST));
+      allowing(interactionStore).findBy(INTERACTION_REQUEST); will(returnValue(Interaction.none()));
     }});
 
     assertThat(repository.findBy(REQUEST, payload), is(nullValue()));
@@ -87,11 +89,10 @@ public class HttpInteractionStoreAdapterTest {
   public void findSavedRequest() throws Exception {
     byte[] payload = {9, 8};
     byte[] responsePayload = {1, 2, 3};
-    InteractionRequest interactionReq = new InteractionRequest(null, null, "application/json", payload);
 
     context.checking(new Expectations() {{
-      allowing(interactionFactory).newRequest(REQUEST, payload); will(returnValue(interactionReq));
-      allowing(interactionStore).findBy(interactionReq); will(returnValue(InteractionBuilder.anInteraction(responsePayload).build()));
+      allowing(interactionFactory).newRequest(REQUEST, payload); will(returnValue(INTERACTION_REQUEST));
+      allowing(interactionStore).findBy(INTERACTION_REQUEST); will(returnValue(InteractionBuilder.anInteraction(responsePayload).build()));
     }});
 
     ClientHttpResponse response = repository.findBy(REQUEST, payload);

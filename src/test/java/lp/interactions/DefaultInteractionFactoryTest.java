@@ -10,6 +10,9 @@ import org.springframework.mock.http.client.MockClientHttpResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static lp.interactions.RequestBuilder.aGetJsonRequest;
+import static lp.interactions.RequestBuilder.aGetRequest;
+import static lp.interactions.RequestBuilder.aPostRequest;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpStatus.OK;
@@ -28,31 +31,31 @@ public class DefaultInteractionFactoryTest {
   public void newRequest_ofRequestWithoutBody() throws Exception {
     MockClientHttpRequest noBodyReq = new MockClientHttpRequest(HttpMethod.GET, new URI("ANYURI"));
 
-    assertThat(factory.newRequest(noBodyReq, null), is(new InteractionRequest("GET", "ANYURI", "", null)));
+    assertThat(factory.newRequest(noBodyReq, null), is(aGetRequest().build()));
   }
 
   @Test
   public void newRequest_ofRequestWithBody() throws Exception {
     MockClientHttpRequest requestWithBody = new MockClientHttpRequest(HttpMethod.POST, new URI("ANYURI"));
 
-    assertThat(factory.newRequest(requestWithBody, ANY_BODY), is(new InteractionRequest("POST", "ANYURI", "", ANY_BODY)));
+    assertThat(factory.newRequest(requestWithBody, ANY_BODY), is(aPostRequest().withBody(ANY_BODY).build()));
   }
 
   @Test
   public void newRequest_ofRequestWithSingleAcceptedType() throws Exception {
-    MockClientHttpRequest requestWithBody = new MockClientHttpRequest(HttpMethod.POST, new URI("ANYURI"));
+    MockClientHttpRequest requestWithBody = new MockClientHttpRequest(HttpMethod.GET, new URI("ANYURI"));
     requestWithBody.getHeaders().set("Accept", "application/json");
 
-    assertThat(factory.newRequest(requestWithBody, ANY_BODY), is(new InteractionRequest("POST", "ANYURI", "application/json", ANY_BODY)));
+    assertThat(factory.newRequest(requestWithBody, null), is(aGetJsonRequest().build()));
   }
 
   @Test
   public void newRequest_ofRequestWithMultipleAcceptedType() throws Exception {
-    MockClientHttpRequest requestWithBody = new MockClientHttpRequest(HttpMethod.POST, new URI("ANYURI"));
+    MockClientHttpRequest requestWithBody = new MockClientHttpRequest(HttpMethod.GET, new URI("ANYURI"));
     requestWithBody.getHeaders().add("Accept", "application/json");
     requestWithBody.getHeaders().add("Accept", "*/*");
 
-    assertThat(factory.newRequest(requestWithBody, ANY_BODY), is(new InteractionRequest("POST", "ANYURI", "application/json,*/*", ANY_BODY)));
+    assertThat(factory.newRequest(requestWithBody, null), is(aGetRequest().withAccept("application/json,*/*").build()));
   }
 
   @Test
