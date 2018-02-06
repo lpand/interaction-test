@@ -24,6 +24,7 @@ public class HttpInteractionStoreAdapter implements HttpInteractionStore {
 
   @Override
   public void save(HttpRequest request, byte[] body, ClientHttpResponse response) {
+    // TODO: generate id here
     Interaction interaction = interactionFactory.newInteraction(request, body, response);
     try {
       interactionStore.save(interaction);
@@ -37,10 +38,13 @@ public class HttpInteractionStoreAdapter implements HttpInteractionStore {
   }
 
   private MockClientHttpResponse makeHttpResponse(Interaction i) {
+    // TODO: add headers
+    // TODO: adapter collaborator?
     return new MockClientHttpResponse(i.response().payload(), statusAsInt(i.response().status()));
   }
 
   private Interaction findInteraction(HttpRequest request, byte[] body) {
+    // TODO: use an id along with an id generator
     return interactionStore.findBy(interactionFactory.newRequest(request, body));
   }
 
@@ -48,6 +52,7 @@ public class HttpInteractionStoreAdapter implements HttpInteractionStore {
     return HttpStatus.valueOf(Integer.parseInt(status));
   }
 
+  // TODO: move out
   public static class UnableToSaveException extends RuntimeException {
     public UnableToSaveException(HttpRequest request) {
       super(request.toString());

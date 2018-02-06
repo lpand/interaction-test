@@ -27,6 +27,7 @@ public class InteractionFileSystemStore implements InteractionStore {
   @Override
   public void save(Interaction interaction) {
     delegate.save(interaction);
+    // FIXME: save new interaction too
     storeOnFile(interactionSerializer.serialize(storedInteractions));
   }
 
